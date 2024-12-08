@@ -36,7 +36,7 @@ class QuestionModelTests(TestCase):
         with pub_date within the last day.
         """
         
-        time = timezone.now() + datetime.timedelta(hours=23, minutes=59, seconds=59)
+        time = timezone.now() - datetime.timedelta(hours=23, minutes=59, seconds=59)
         recent_question = Question(pub_date=time)
 
         self.assertIs(recent_question.was_published_recently(), True)
@@ -96,7 +96,7 @@ class QuestionIndexViewTests(TestCase):
         question1 = create_question(question_text="Past question 1.", days=-30)
         question2 = create_question(question_text="Past question 2.", days=-5)
         response = self.client.get(reverse("polls:index"))
-        self.assertQuerySetEqual(response.context["latest_question_list"],[question1, question2])
+        self.assertQuerySetEqual(response.context["latest_question_list"],[question2, question1])
 
 
 class QuestionDetailsViewTests(TestCase):
